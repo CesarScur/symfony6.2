@@ -1,6 +1,31 @@
 version: '3'
 
 services:
+  nginx:
+    image: nginx:stable-alpine
+    networks:
+      - internal
+    ports:
+      - "8000:80"
+      - "443:443"
+    volumes:
+      - ./public:/var/www/html/
+      - ./docker/nginx:/etc/nginx/conf.d/
+      - ./var/log/nginx:/var/log/nginx/
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    networks:
+      - internal
+    tty: true
+    ports:
+      - 9000:9000
+    volumes:
+      - .:/var/www/html
+    working_dir: /var/www/html
+
 ###> doctrine/doctrine-bundle ###
   database:
     image: postgres:${POSTGRES_VERSION:-15}-alpine
@@ -19,3 +44,7 @@ volumes:
 ###> doctrine/doctrine-bundle ###
   database_data:
 ###< doctrine/doctrine-bundle ###
+
+networks:
+  internal:
+    driver: bridge
