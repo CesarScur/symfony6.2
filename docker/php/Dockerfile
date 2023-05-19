@@ -69,3 +69,10 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get update && apt-get install -y nodejs build-essential
 
 RUN npm install --global yarn
+
+RUN groupmod -g 1000 www-data
+RUN usermod -u 1000 -g 1000 www-data
+RUN usermod -a -G root www-data
+RUN usermod -d /home/www-data www-data
+RUN mkdir /home/www-data
+RUN chown www-data:www-data /home/www-data

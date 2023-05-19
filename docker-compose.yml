@@ -20,6 +20,7 @@ services:
     networks:
       - internal
     tty: true
+    user: www-data:www-data
     ports:
       - 9000:9000
     volumes:
